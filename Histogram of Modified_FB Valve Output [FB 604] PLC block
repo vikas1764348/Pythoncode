@@ -1,0 +1,8 @@
+# 1. Importing required libraries
+import pandas as pd
+from matplotlib import pyplot as plt
+import numpy as np
+
+ # 2. Histogram plot style and reading .csv file
+plt.style.use('ggplot')
+data=pd.read_csv(r'C:\Cycletime\HAHN_DOC\\ADD.csv')
