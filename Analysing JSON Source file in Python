@@ -1,1 +1,36 @@
-# Import 
+# 1. Importing required libraries
+import pandas as pd
+from matplotlib import pyplot as plt
+import numpy as np
+from pandas import json_normalize
+import json
+import csv
+
+# 2. Open the file and Convert string to Python dict 
+with open('C:\cycle_time\graph.json','r') as f:
+    data = json.load(f)
+
+# 3. To extract the begining and ending time of every cylces in particular OB, FB, FC block and subtract the ending time to begining time
+light_fb2 = [x for x in data["traceEvents"] if x["name"] == "light [FB2]"]
+
+light_fb2_dict = {"begintime": [], "endtime": [], "selftime": [], "args": []}
+
+found = False
+for x in light_fb2:  
+    print(x)
+    if x["ph"] == "B":
+        tsB = x["ts"]
+        light_fb2_dict["begintime"].append(tsB)
+        #break
+    if x["ph"] == "E":
+        tsE = x["ts"]
+        light_fb2_dict["endtime"].append(tsE)
+        #break
+        selfTime = (tsE - tsB)
+        light_fb2_dict["selftime"].append(selfTime)
+        light_fb2_dict["args"].append(x["args"])
+light_fb2_dict["selftime"]
+
+# 4. Create the dataframe and save the data into csv file 
+light_fb2_dict_df = pd.DataFrame(light_fb2_dict)
+light_fb2_dict_df.to_csv('light_fb2_dict_df.csv', index=False)
