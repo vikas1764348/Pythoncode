@@ -8,7 +8,7 @@ import ijson
 import csv
 
 # 2. Open and read the JSON file 
-with open('C:\cycle_time\JSON_file_testing\light2\light2.json','r') as f:
+with open('C:\cycle_time\JSON_file_testing\light\block2.json','r') as f:
     data = json.load(f)
 
 # 3. Extract the data for Block_2 [FB1] block and calculate the Duration
