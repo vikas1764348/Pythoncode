@@ -10,7 +10,7 @@ import csv
 with open('C:\cycle_time\graph.json','r') as f:
     data = json.load(f)
 
-# 3. To extract the begining and ending time of every cylces in particular OB, FB, FC block and subtract the ending time to begining time
+# 3. To extract the begining and ending time of every cylces in Light FB2 block and subtract the ending time to begining time
 light_fb2 = [x for x in data["traceEvents"] if x["name"] == "light [FB2]"]
 
 light_fb2_dict = {"begintime": [], "endtime": [], "selftime": [], "args": []}
@@ -34,3 +34,19 @@ light_fb2_dict["selftime"]
 # 4. Create the dataframe and save the data into csv file 
 light_fb2_dict_df = pd.DataFrame(light_fb2_dict)
 light_fb2_dict_df.to_csv('light_fb2_dict_df.csv', index=False)
+
+# 5. Histogram  generation for Light [FB2] block
+def light_fb(min_range,max_range,steps): 
+    Runtime = data['selftime']
+    bins = np.arange(min_range, max_range, steps)
+    total_samples = 32630
+    relative_freqs = np.histogram(Runtime, bins=bins)[0] / total_samples * 100
+    weights = np.ones_like(Runtime) / len(Runtime) * 100
+    plt.hist(Runtime, bins=bins, edgecolor = "black", color = "Green", weights=np.ones_like(Runtime) / total_samples * 100, density=False)          
+    plt.title('Light [FB2]')
+    plt.xlabel('t / µs')
+    plt.gca().set_ylabel('f / %')
+    plt.ylim(0, 100)
+    plt.tight_layout()
+    plt.show()
+light_fb(0,30,2)
