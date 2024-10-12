@@ -107,7 +107,13 @@ block["selfTime"]
 Block2_dict_df = pd.DataFrame(block)
 Block2_dict_df.to_csv('block2.csv', index=False)
 
-# 8. Histogram generation for Block_2 [FB2] block
+# 8. Histogram plot style and reading .csv file
+plt.style.use('ggplot')
+data=pd.read_csv(r'C:\cycle_time\JSON_file_testing\light\block2.csv')
+plt.figure(figsize=(12, 6))
+data
+
+# 9. Histogram generation for Block_2 [FB2] block
 def Block2_fb(min_range,max_range,steps): 
     Runtime = data['selfTime']
     bins = np.arange(min_range, max_range, steps)
