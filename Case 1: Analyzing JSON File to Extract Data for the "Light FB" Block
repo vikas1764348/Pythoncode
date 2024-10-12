@@ -35,7 +35,10 @@ light_fb2_dict["selftime"]
 light_fb2_dict_df = pd.DataFrame(light_fb2_dict)
 light_fb2_dict_df.to_csv('light_fb2_dict_df.csv', index=False)
 
-# 5. Histogram  generation for Light [FB2] block
+# 5. Histogram plot style and reading .csv file
+
+
+# 6. Histogram  generation for Light [FB2] block
 def light_fb(min_range,max_range,steps): 
     Runtime = data['selftime']
     bins = np.arange(min_range, max_range, steps)
