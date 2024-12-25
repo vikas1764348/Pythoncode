@@ -30,4 +30,4 @@ def Modified_FB_Valve_Block(min,max,steps):
     plt.ylim(0, 100)
     plt.tight_layout()
     plt.show()
-Modified_FB_Valve_Block()
+Modified_FB_Valve_Block(0,245,5)
