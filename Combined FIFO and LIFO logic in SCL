@@ -1,0 +1,80 @@
+// INITIALIZE COUNTER ON POP
+IF #POP THEN
+    #counter := 0;
+    FOR #i := 0 TO #n - 1 DO
+        IF (#mode = 0 AND #Buffer[#i] <> 0) OR (#mode = 1 AND #Buffer[#i] <> 0) THEN
+            #counter := #counter + 1;
+        END_IF;
+    END_FOR;
+    
+    #full := #counter = #n;
+    #empty := #counter = 0;
+END_IF;
+
+// RESET LOGIC
+IF #reset THEN
+    FOR #i := 0 TO #n-1 DO
+        #Buffer[#i] := 0;
+    END_FOR;
+    
+    #pw_no_POP := #pr_no_POP;
+    #full := FALSE;
+    #empty := TRUE;
+    #output := 0;
+// ENABLE LOGIC    
+ELSIF #Enable THEN
+    // READ POP (SELECT BASED ON MODE)
+    IF NOT #empty AND #POP AND #read THEN
+        IF #mode = 0 THEN
+            // FIFO READ
+            #output := #Buffer[0];
+            FOR #i := 0 TO #n - 2 DO
+                #Buffer[#i] := #Buffer[#i + 1];
+            END_FOR;
+            #Buffer[#n - 1] := 0;
+        ELSE
+            // LIFO READ
+            #output := #Buffer[#counter - 1];
+            #Buffer[#counter - 1] := 0;
+        END_IF;
+        
+        #counter := #counter - 1;
+        #full := FALSE;
+        #empty := (#counter = 0);
+    END_IF;
+    
+    // WRITE POP (SELECT BASED ON MODE)
+    IF NOT #full AND #POP AND #write THEN
+        IF #mode = 0 THEN
+            // FIFO WRITE
+            #Buffer[#counter] := #item;
+        ELSE
+            // LIFO WRITE
+            #Buffer[#counter] := #item;
+        END_IF;
+        
+        #pw := #counter;
+        #counter := #counter + 1;
+        #full := (#counter = #n);
+        #empty := FALSE;
+    END_IF;
+  // WRITE NO POP 
+    IF NOT #full AND #write THEN
+        IF #mode = 0 THEN
+            // FIFO WRITE_NO_POP
+            #Buffer[#pw_no_POP ] := #item;
+        ELSE
+            // LIFO WRITE_NO_POP
+            #Buffer[#pw_no_POP ] := #item;
+        END_IF;
+        
+        IF #pw_no_POP >= #n-1 THEN
+            #pw_no_POP := 0;
+        ELSE
+            #pw_no_POP := #pw_no_POP + 1;
+        END_IF;
+        
+        #full := #pw_no_POP = #pr_no_POP;
+        #empty := FALSE;
+    END_IF;
+END_IF;
